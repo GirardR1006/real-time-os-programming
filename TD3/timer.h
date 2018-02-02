@@ -1,11 +1,11 @@
 #include <time.h>
+#include <signal.h>
 /**
  * This is the documentation for Timer class
  */
 class Timer
 {
     private:
-        timer_t tid;//!< POSIX timer
         /*!
         * call_callback definition
         * @param[in] sig ID of signal
@@ -31,7 +31,8 @@ class Timer
          *Stop the timer
          */
         void stop(); 
-    protected
+    protected:
+        timer_t tid;//!< POSIX timer
         /*!
         * Virtual callback definition, to be implemented in a derivate class
         */

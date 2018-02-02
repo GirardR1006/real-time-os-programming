@@ -13,36 +13,37 @@ Timer::Timer()
     sev.sigev_notify = SIGEV_SIGNAL;
     sev.sigev_signo = SIGRTMIN;
     sev.sigev_value.sival_ptr = this;
-    timer_create(CLOCK_REALTIME, &sev, &this->tid);    
+    timer_create(CLOCK_REALTIME, &sev, &tid);    
 }
 
 Timer::~Timer()
 {
-    timer_delete(this->tid);
+    timer_delete(tid);
 }
 
-void start(double duration_ms)
+void Timer::start(double duration_ms)
 {
+
     struct itimerspec its;
-    its.it_value.tv_sec= 0;
-    its.it_value.tv_nsec = duration_ms*1000;
+    its.it_value.tv_sec= duration_ms/1000;
+    its.it_value.tv_nsec = (duration_ms-its.it_value.tv_sec*1000)*1000000;
     its.it_interval.tv_sec=0;
     its.it_interval.tv_nsec = 0;
     timer_settime(tid,0,&its,NULL);
 }
 
-void stop()
+void Timer::stop()
 {
     struct itimerspec stahp;
     stahp.it_value.tv_sec= 0;
-    stahp.it_value.tv_nsec = duration_ms*1000;
+    stahp.it_value.tv_nsec = 0;
     stahp.it_interval.tv_sec=0;
     stahp.it_interval.tv_nsec = 0;
     timer_settime(tid,0,&stahp,NULL);
 }
 
-void call_callback(int sig, siginfo_t* si, void*)
+void Timer::call_callback(int sig, siginfo_t* si, void*)
 {
-    Timer* timer_ = (Timer*) si->si_value.sival_ptr;
-    timer_->callback();
+    Timer* timer = (Timer*) si->si_value.sival_ptr;
+    timer->callback();
 }
