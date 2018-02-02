@@ -1,0 +1,9 @@
+*
+!.gitignore
+!*/
+!TD1/*.cpp
+!TD1/*.h
+!TD2/*.cpp
+!TD2/*.h
+!TD3/*.cpp
+!TD3/*.h
